@@ -12,7 +12,7 @@ count =0
 with open('grad_mba_rank.csv','wb') as f1:
     writer=csv.writer(f1, delimiter=',', lineterminator = '\n')
     #Header Row
-    writer.writerow(["University","College","Avg_Gmat", "Yield", "Selectivity", "Job_Offers", "Average_Salary", "Top_Industry","Workex","Workex_minmax", "Program_Cost", "Living", "No_Full_Sch" ,"Average_Sch", "Avg_sch_student%", "Link" ])
+    writer.writerow(["University","College","Avg_Gmat", "Yield", "Selectivity", "Job_Offers", "Average_Salary", "Top_Industry","Workex","Workex_minmax", "Program_Cost", "Living", "No_Full_Sch" ,"Average_Sch", "Avg_sch_student%","Interntl_Stdnt","Feml_Stdnt" "Link" ])
     #Starting Url to grab all the links
     htmltext = urllib.urlopen("http://www.businessweek.com/bschools/rankings").read()
     soup = BeautifulSoup(htmltext)
@@ -90,9 +90,19 @@ with open('grad_mba_rank.csv','wb') as f1:
             except:
                 avg_sch_student = "NA"
            #print Average_Scholarship,avg_sch_student
-          
+        # %International Students and %Female Students
+        student = soup1.find_all('div', {"class":"topic_module"})
+        try:
+            int_st = student[4].find('em',{"class":"divider"}).text
+        except:
+            int_st = "NA"
+        try:
+            fem = student[4].find_all('td',{"class":"one_sixth"})[1].em.text
+        except:
+            fem = "NA"
+  
          #Making a list of tupules             
-        row = [(university),(college),(stat.get("Avg GMAT (Admitted Students)","NA")),(stat.get("Yield","NA")),(stat.get("Selectivity","NA")),(stat.get("Job Offers","NA")),(stat.get("Average Salary","NA")),(stat.get("Top Industry","NA")),(workex),(minmax),(Program_Cost), (Budget), (No_Ft), (Average_Scholarship),(avg_sch_student),( full_link[0]) ]
+        row = [(university),(college),(stat.get("Avg GMAT (Admitted Students)","NA")),(stat.get("Yield","NA")),(stat.get("Selectivity","NA")),(stat.get("Job Offers","NA")),(stat.get("Average Salary","NA")),(stat.get("Top Industry","NA")),(workex),(minmax),(Program_Cost), (Budget), (No_Ft), (Average_Scholarship),(avg_sch_student),(int_st),(fem),( full_link[0]) ]
         print row
         #writing to file
         writer.writerow(row)
